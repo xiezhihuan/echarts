@@ -380,7 +380,7 @@ var renderMap = function (input, element,center) {
         },
 
         /*图表的配置*/
-        firstOption: {
+        optionXyMap01: {
             timeline: {
                 data: year,
                 axisType: 'category',
@@ -736,100 +736,99 @@ var renderMap = function (input, element,center) {
 
     var option = (function (secondOption) {
         for (var n = 0; n < input.length; n++) {
-                var newSecondOption = (function (staticData,input,year,lineData,n) {
-                    const color = staticData.colors[colorIndex][n];
+            const color = staticData.colors[colorIndex][n]
+            secondOption.title[1].text = year[n] + "新生人数";
+            secondOption.yAxis.data =
+                (function (input, n) {
+                    var provinceTextArray = [];
+                    for (var i = 0; i < input[n].length; i++) {
+                        provinceTextArray.push((function (province) {
+                            var provinceStr = province.slice(0, 2)
+                            if (provinceStr === '黑龙') provinceStr = provinceStr + '江';
+                            if (provinceStr === '内蒙') provinceStr = provinceStr + '古';
+                            return provinceStr;
+                        })(input[n][i].province));
+                    }
 
-                    secondOption.title[1].text = year[n] + "新生人数";
-                    secondOption.yAxis.data =
-                        (function (input, n) {
-                            var provinceTextArray = [];
-                            for (var i = 0; i < input[n].length; i++) {
-                                provinceTextArray.push((function (province) {
-                                    var provinceStr = province.slice(0, 2)
-                                    if (provinceStr === '黑龙') provinceStr = provinceStr + '江';
-                                    if (provinceStr === '内蒙') provinceStr = provinceStr + '古';
-                                    return provinceStr;
-                                })(input[n][i].province));
-                            }
+                    return provinceTextArray
+                })(input, n)
 
-                            return provinceTextArray
-                        })(input, n)
-
-                    secondOption.series[0].data =
-                        (function (staticData) {
-                            var provincePosition = [];
-                            for (var i = 0; i < staticData.geoJson.features.length; i++) {
-                                provincePosition.push({
-                                    name: staticData.geoJson.features[i].properties.name,
-                                    value: [
-                                        staticData.geoJson.features[i].properties.cp[0],
-                                        staticData.geoJson.features[i].properties.cp[1],
-                                        (function (input, province) {
-                                            for (var i = 0; i < input.length; i++) {
-                                                for (var j = 0; j < input[i].length; j++) {
-                                                    if (input[i][j].province === province) {
-                                                        return input[i][j].count / 10;  //todo 想想怎么去减少值差，又不影响大小关系
-                                                    }
-                                                }
+            secondOption.series[0].data =
+                (function (staticData) {
+                    var provincePosition = [];
+                    for (var i = 0; i < staticData.geoJson.features.length; i++) {
+                        provincePosition.push({
+                            name: staticData.geoJson.features[i].properties.name,
+                            value: [
+                                staticData.geoJson.features[i].properties.cp[0],
+                                staticData.geoJson.features[i].properties.cp[1],
+                                (function (input, province) {
+                                    for (var i = 0; i < input.length; i++) {
+                                        for (var j = 0; j < input[i].length; j++) {
+                                            if (input[i][j].province === province) {
+                                                return input[i][j].count / 10;  //todo 想想怎么去减少值差，又不影响大小关系
                                             }
-                                        })(input, staticData.geoJson.features[i].properties.name)
+                                        }
+                                    }
+                                })(input, staticData.geoJson.features[i].properties.name)
 
-                                    ]
-                                });
-                            }
-                            return provincePosition;
-                        })(staticData)
+                            ]
+                        });
+                    }
+                    return provincePosition;
+                })(staticData)
 
-                    secondOption.series[0].itemStyle.normal.color = color;
+            secondOption.series[0].itemStyle.normal.color = color;
 
-                    secondOption.series[2].data =
-                        (function (staticData) {
-                            var provincePosition = [];
-                            for (var i = 0; i < staticData.geoJson.features.length; i++) {
-                                provincePosition.push({
-                                    name: staticData.geoJson.features[i].properties.name,
-                                    value: [
-                                        staticData.geoJson.features[i].properties.cp[0],
-                                        staticData.geoJson.features[i].properties.cp[1],
-                                        (function (input, province) {
-                                            for (var i = 0; i < input.length; i++) {
-                                                for (var j = 0; j < input[i].length; j++) {
-                                                    if (input[i][j].province === province) {
-                                                        return input[i][j].count / 10;  //todo 想想怎么去减少值差，又不影响大小关系
-                                                    }
-                                                }
+            secondOption.series[2].data =
+                (function (staticData) {
+                    var provincePosition = [];
+                    for (var i = 0; i < staticData.geoJson.features.length; i++) {
+                        provincePosition.push({
+                            name: staticData.geoJson.features[i].properties.name,
+                            value: [
+                                staticData.geoJson.features[i].properties.cp[0],
+                                staticData.geoJson.features[i].properties.cp[1],
+                                (function (input, province) {
+                                    for (var i = 0; i < input.length; i++) {
+                                        for (var j = 0; j < input[i].length; j++) {
+                                            if (input[i][j].province === province) {
+                                                return input[i][j].count / 10;  //todo 想想怎么去减少值差，又不影响大小关系
                                             }
-                                        })(input, staticData.geoJson.features[i].properties.name)
-                                    ]
-                                });
-                            }
-                            return provincePosition;
-                        })(staticData)
+                                        }
+                                    }
+                                })(input, staticData.geoJson.features[i].properties.name)
+                            ]
+                        });
+                    }
+                    return provincePosition;
+                })(staticData)
 
-                    secondOption.series[2].itemStyle.normal.color = color;
-                    secondOption.series[2].itemStyle.normal.shadowColor = color;
+            secondOption.series[2].itemStyle.normal.color = color;
+            secondOption.series[2].itemStyle.normal.shadowColor = color;
 
-                    secondOption.series[3].lineStyle.normal.color = color;
+            secondOption.series[3].lineStyle.normal.color = color;
 
-                    secondOption.series[3].data = lineData[n];
+            secondOption.series[3].data = lineData[n];
 
-                    secondOption.series[4].itemStyle.normal.color = color;
+            secondOption.series[4].itemStyle.normal.color = color;
 
-                    secondOption.series[4].data =
-                        (function (input, n) {
-                            var provinceCountArray = [];
-                            for (var i = 0; i < input[n].length; i++) {
-                                provinceCountArray.push(input[n][i].count);
-                            }
-                            return provinceCountArray
-                        })(input, n)
-                    console.log(secondOption);
-                    return secondOption;
-                })(staticData,input,year,lineData,n)
-                staticData.firstOption.options.push(newSecondOption)
-                console.log(secondOption.title[1].text);
+            secondOption.series[4].data =
+                (function (input, n) {
+                    var provinceCountArray = [];
+                    for (var i = 0; i < input[n].length; i++) {
+                        provinceCountArray.push(input[n][i].count);
+                    }
+                    return provinceCountArray
+                })(input, n)
+
+            staticData.optionXyMap01.options.push(JSON.parse(JSON.stringify(secondOption)));
+            //!!!注意如果不对secondOption字符串化，最后会发现option里push进去的都是一样的数据，也就是最后一次改变的数据。
+            // 因为这是浅拷贝
+            //secondOption.series[3].data = lineData[n] 中data拿到的是 lineData[n]的引用，也就是说当n改变的时候，data也改变。
+            // 最后体现的效果就是options数组里的元素都是一样的
         }
-        return staticData.firstOption;
+        return staticData.optionXyMap01;
     })(staticData.secondOption);
 
     debugger;
