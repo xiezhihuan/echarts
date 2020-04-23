@@ -1,7 +1,7 @@
 
 /*
 * 输入数据*/
-var input = [
+var mapInput = [
     [
         {province: '甘肃省', count: 57},
         {province: '山东省', count: 136},
@@ -219,179 +219,97 @@ var input = [
         {province: '台湾省', count: 5}
     ],
 ];
-var element = document.getElementById('main');
+var mapElement = document.getElementById('map');
 var center = [116.4551, 40.2539]; //北京的经纬度
-renderMap(input, element,center);
+renderMap(mapInput, mapElement,center);
 
-secondOption={
-    backgroundColor: '#013954',
-    title: [
-    {
-        text: '北京联合大学',
-        subtext: '数据由数据资源中心、招生办提供',
-        left: '35%',
-        top: '5%',
-        textStyle: {
-            color: '#fff',
-            fontSize: 25
-        }
-    },
-    {
-        id: 'statistic',
-        text: "某年新生人数",//动态配置
-        left: '75%',
-        top: '8%',
-        textStyle: {
-            color: '#fff',
-            fontSize: 25
-        }
-    }
-],
-    xAxis: {
-        show: false
-    },
-    yAxis: {
-        type: 'category',
-            nameGap: 16,
-            axisLine: {
-            show: true,
-                lineStyle: {
-                color: '#ddd'
-            }
-        },
-        axisTick: {
-            show: false,
-                lineStyle: {
-                color: '#ddd'
-            }
-        },
-        axisLabel: {
-            interval: 0,
-                textStyle: {
-                color: '#ddd'
-            }
-        },
-        data: [] //动态配置
-    },
-
-    series: [
-        //文字和标志
-        {
-            name: 'light',
-            type: 'scatter',
-            coordinateSystem: 'geo',
-            data: [], //动态配置
-            symbolSize: function (val) {
-                return val[2] / 10;
-            },
-            label: {
-                normal: {
-                    formatter: '{b}',
-                    position: 'right',
-                    show: true
-                },
-                emphasis: {
-                    show: true
-                }
-            },
-            itemStyle: {
-                normal: {
-                    color: '' //动态配置
-                }
-            }
-        },
-        //地图
-        {
-            type: 'map',
-            map: 'china',
-            geoIndex: 0,
-            aspectScale: 0.75, //长宽比
-            showLegendSymbol: false, // 存在legend时显示
-            label: {
-                normal: {
-                    show: false
-                },
-                emphasis: {
-                    show: false,
-                    textStyle: {
-                        color: '#fff'
-                    }
-                }
-            },
-            roam: true,
-            itemStyle: {
-                normal: {
-                    areaColor: '#031525',
-                    borderColor: '#FFFFFF',
-                },
-                emphasis: {
-                    areaColor: '#2B91B7'
-                }
-            },
-            animation: false,
-            data: input
-        },
-        //地图点的动画效果
-        {
-            type: 'effectScatter',
-            coordinateSystem: 'geo',
-            data: [], //动态配置
-            symbolSize: function (val) {
-                return val[2] / 10;
-            },
-            showEffectOn: 'render',
-            rippleEffect: {
-                brushType: 'stroke'
-            },
-            hoverAnimation: true,
-            label: {
-                normal: {
-                    formatter: '{b}',
-                    position: 'right',
-                    show: true
-                }
-            },
-            itemStyle: {
-                normal: {
-                    color: '', //动态配置
-                    shadowBlur: 10,
-                    shadowColor: '' //动态配置
-                }
-            },
-            zlevel: 1
-        },
-        //地图线的动画效果
-        {
-            type: 'lines',
-            zlevel: 2,
-            effect: {
-                show: true,
-                period: 4, //箭头指向速度，值越小速度越快
-                trailLength: 0.02, //特效尾迹长度[0,1]值越大，尾迹越长重
-                symbol: 'arrow', //箭头图标
-                symbolSize: 3, //图标大小
-            },
-            lineStyle: {
-                normal: {
-                    color: '',//动态配置
-                    width: 0.1, //尾迹线条宽度
-                    opacity: 0.5, //尾迹线条透明度
-                    curveness: .3 //尾迹线条曲直度
-                }
-            },
-            data: [] //动态配置
-        },
-        //柱状图
-        {
-            zlevel: 1.5,
-            type: 'bar',
-            symbol: 'none',
-            itemStyle: {
-                normal: {
-                    color: '' //动态配置
-                }
-            },
-            data: []  //动态配置
-        }
+/*
+* 输入数据*/
+var doubleBarInput = [
+    [
+        {name: '师范学院', maleCount: 160, femaleCount: 441},
+        {name: '应用科技学院', maleCount: 441, femaleCount: 163},
+        {name: '旅游学院', maleCount: 163, femaleCount: 121},
+        {name: '应用文理学院', maleCount: 121, femaleCount: 160},
+        {name: '艺术学院', maleCount: 160, femaleCount: 182},
+        {name: '健康与环境学院', maleCount: 309, femaleCount: 309},
+        {name: '机器人学院', maleCount: 129, femaleCount: 129},
+        {name: '城市轨道交通与物流学院', maleCount: 51, femaleCount: 51},
+        {name: '管理学院', maleCount: 182, femaleCount: 267},
+        {name: '商务学院', maleCount: 309, femaleCount: 157},
+        {name: '特殊教育学院', maleCount: 68, femaleCount: 102},
+        {name: '智慧城市学院', maleCount: 110, femaleCount: 44}
+    ],
+    [
+        {name: '师范学院', maleCount: 160, femaleCount: 441},
+        {name: '应用科技学院', maleCount: 441, femaleCount: 163},
+        {name: '旅游学院', maleCount: 163, femaleCount: 121},
+        {name: '应用文理学院', maleCount: 121, femaleCount: 160},
+        {name: '艺术学院', maleCount: 160, femaleCount: 182},
+        {name: '健康与环境学院', maleCount: 182, femaleCount: 309},
+        {name: '机器人学院', maleCount: 309, femaleCount: 129},
+        {name: '城市轨道交通与物流学院', maleCount: 129, femaleCount: 51},
+        {name: '管理学院', maleCount: 125, femaleCount: 267},
+        {name: '商务学院', maleCount: 86, femaleCount: 157},
+        {name: '特殊教育学院', maleCount: 68, femaleCount: 102},
+        {name: '智慧城市学院', maleCount: 110, femaleCount: 44}
+    ],
+    [
+        {name: '师范学院', maleCount: 160, femaleCount: 441},
+        {name: '应用科技学院', maleCount: 441, femaleCount: 163},
+        {name: '旅游学院', maleCount: 163, femaleCount: 121},
+        {name: '应用文理学院', maleCount: 121, femaleCount: 160},
+        {name: '艺术学院', maleCount: 160, femaleCount: 182},
+        {name: '健康与环境学院', maleCount: 309, femaleCount: 309},
+        {name: '机器人学院', maleCount: 129, femaleCount: 129},
+        {name: '城市轨道交通与物流学院', maleCount: 51, femaleCount: 51},
+        {name: '管理学院', maleCount: 163, femaleCount: 267},
+        {name: '商务学院', maleCount: 160, femaleCount: 157},
+        {name: '特殊教育学院', maleCount: 182, femaleCount: 102},
+        {name: '智慧城市学院', maleCount: 309, femaleCount: 44}
+    ],
+    [
+        {name: '师范学院', maleCount: 16, femaleCount: 441},
+        {name: '应用科技学院', maleCount: 441, femaleCount: 163},
+        {name: '旅游学院', maleCount: 163, femaleCount: 121},
+        {name: '应用文理学院', maleCount: 121, femaleCount: 160},
+        {name: '艺术学院', maleCount: 121, femaleCount: 441},
+        {name: '健康与环境学院', maleCount: 160, femaleCount: 163},
+        {name: '机器人学院', maleCount: 182, femaleCount: 121},
+        {name: '城市轨道交通与物流学院', maleCount: 51, femaleCount: 121},
+        {name: '管理学院', maleCount: 163, femaleCount: 160},
+        {name: '商务学院', maleCount: 160, femaleCount: 157},
+        {name: '特殊教育学院', maleCount: 182, femaleCount: 102},
+        {name: '智慧城市学院', maleCount: 309, femaleCount: 44}
+    ],
+    [
+        {name: '师范学院', maleCount: 16, femaleCount: 441},
+        {name: '应用科技学院', maleCount: 441, femaleCount: 163},
+        {name: '旅游学院', maleCount: 163, femaleCount: 121},
+        {name: '应用文理学院', maleCount: 121, femaleCount: 160},
+        {name: '艺术学院', maleCount: 121, femaleCount: 441},
+        {name: '健康与环境学院', maleCount: 160, femaleCount: 163},
+        {name: '机器人学院', maleCount: 182, femaleCount: 121},
+        {name: '城市轨道交通与物流学院', maleCount: 51, femaleCount: 121},
+        {name: '管理学院', maleCount: 163, femaleCount: 160},
+        {name: '商务学院', maleCount: 160, femaleCount: 157},
+        {name: '特殊教育学院', maleCount: 182, femaleCount: 102},
+        {name: '智慧城市学院', maleCount: 309, femaleCount: 44}
+    ],
+    [
+        {name: '师范学院', maleCount: 16, femaleCount: 441},
+        {name: '应用科技学院', maleCount: 441, femaleCount: 163},
+        {name: '旅游学院', maleCount: 163, femaleCount: 121},
+        {name: '应用文理学院', maleCount: 121, femaleCount: 160},
+        {name: '艺术学院', maleCount: 121, femaleCount: 441},
+        {name: '健康与环境学院', maleCount: 160, femaleCount: 163},
+        {name: '机器人学院', maleCount: 182, femaleCount: 121},
+        {name: '城市轨道交通与物流学院', maleCount: 121, femaleCount: 121},
+        {name: '管理学院', maleCount: 121, femaleCount: 160},
+        {name: '商务学院', maleCount: 160, femaleCount: 157},
+        {name: '特殊教育学院', maleCount: 157, femaleCount: 102},
+        {name: '智慧城市学院', maleCount: 309, femaleCount: 44}
     ]
-}
+];
+var  doubleBarElement= document.getElementById('doubleBar');
+renderDoubleBar(doubleBarInput,doubleBarElement);
